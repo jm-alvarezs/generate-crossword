@@ -1,10 +1,9 @@
 function sortWords(words) {
-  return words.sort((a, b) => (a.length > b.length ? -1 : 1));
+  return words.sort((a, b) => (a.value.length > b.value.length ? -1 : 1));
 }
 
 function placeWords(words, maxCols, maxRows) {
   words = sortWords(words);
-  console.log(words);
   let original = [...words];
   let queue = [...original];
   let placed = new Array();
@@ -33,10 +32,10 @@ function placeWords(words, maxCols, maxRows) {
 function placeWord(currWord, placed, maxCols, maxRows) {
   if (placed.length === 0) {
     placed.push({
-      value: currWord,
+      ...currWord,
       x0: 0,
       y0: 0,
-      xf: currWord.length,
+      xf: currWord.value.length,
       yf: 0,
       direction: "across",
     });
@@ -46,18 +45,18 @@ function placeWord(currWord, placed, maxCols, maxRows) {
     placed.forEach((word) => {
       if (!isPlaced) {
         let value = word.value;
-        for (let i = 0; i < currWord.length; i++) {
-          let index = value.indexOf(currWord[i]);
+        for (let i = 0; i < currWord.value.length; i++) {
+          let index = value.indexOf(currWord.value[i]);          
           if (index !== -1) {
             let direction = word.direction === "across" ? "vertical" : "across";
             let x0 = direction === "vertical" ? word.x0 + index : word.x0 - i;
             let y0 =
               direction === "vertical" ? word.y0 - i : word.x0 + i + word.y0;
-            let xf = direction === "across" ? x0 + currWord.length : x0;
-            let yf = direction === "vertical" ? y0 + currWord.length : y0;
+            let xf = direction === "across" ? x0 + currWord.value.length : x0;
+            let yf = direction === "vertical" ? y0 + currWord.value.length : y0;
             if (fitsInGrid(x0, y0, xf, yf, direction, xMin, yMin, xMax, yMax, maxCols, maxRows) && placeable(x0, y0, xf, yf, direction, placed, currWord)) {
               placed.push({
-                value: currWord,
+                ...currWord,
                 x0,
                 y0,
                 xf,
@@ -91,7 +90,7 @@ function placeable(x0, y0, xf, yf, direction, placed, currWord) {
             word.xf <= xf &&
             (word.y0 === y0 || word.y0 === y0 + 1 || word.y0 === y0 - 1)
           : word.y0 >= x0 || word.y0 <= xf
-          ? word.value[y0 - word.y0] !== currWord[word.x0 - x0]
+          ? word.value[y0 - word.y0] !== currWord.value[word.x0 - x0]
           : false
       );
       return placedWords === undefined;
@@ -99,7 +98,7 @@ function placeable(x0, y0, xf, yf, direction, placed, currWord) {
     let placedWords = placed.find((word) =>
         word.direction === "across"
           ? word.x0 <= x0 && word.xf >= x0 ?
-          word.value[x0 - word.x0] !== currWord[word.y0 - y0]
+          word.value[x0 - word.x0] !== currWord.value[word.y0 - y0]
           : false
           : (word.x0 === x0 || word.x0 === x0 - 1 || word.x0 === x0 +1)
       );
@@ -132,7 +131,7 @@ function formatMatrix(words) {
 
 function generateCrossword(words, maxCols, maxRows) {
   let map = placeWords(words, maxCols, maxRows);
-  return formatMatrix(words);
+  return formatMatrix(map);
 }
 
 module.exports = { generateCrossword };
