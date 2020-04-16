@@ -1,0 +1,19 @@
+{
+  "name": "generate-crossword",
+  "version": "1.0.0",
+  "description": "crossword generator for an array of strings",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jm-alvarezs/generate-crossword.git"
+  },
+  "author": "Juan Manuel Alvarez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jm-alvarezs/generate-crossword/issues"
+  },
+  "homepage": "https://github.com/jm-alvarezs/generate-crossword#readme"
+}
