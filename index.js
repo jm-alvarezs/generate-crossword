@@ -2,11 +2,12 @@ function sortWords(words) {
   return words.sort((a, b) => (a.value.length > b.value.length ? -1 : 1));
 }
 
-function placeWords(words, maxCols, maxRows) {
+function placeWords(words, maxCols, maxRows, limit) {
   words = sortWords(words);
   let original = [...words];
   let queue = [...original];
   let placed = new Array();
+  let j = 0;
   let i = 0;
   while (queue.length > 0) {
     if (i === words.length * 2 - 1) {
@@ -25,6 +26,10 @@ function placeWords(words, maxCols, maxRows) {
       }
     }
     i++;
+    j++;
+    if(limit) {
+      if(j > limit) throw new Error("No pudo formarse un crucigrama");
+    }    
   }
   return placed;
 }
@@ -129,9 +134,13 @@ function formatMatrix(words) {
   return words;
 }
 
-function generateCrossword(words, maxCols, maxRows) {
-  let map = placeWords(words, maxCols, maxRows);
-  return formatMatrix(map);
+function generateCrossword(words, maxCols, maxRows, limit) {
+  try {
+    let map = placeWords(words, maxCols, maxRows, limit);
+    return formatMatrix(map);
+  } catch (e) {
+    throw e;
+  }  
 }
 
 module.exports = { generateCrossword };
