@@ -27,7 +27,7 @@ function placeWords(words, maxCols, maxRows, limit) {
     }
     i++;
     j++;
-    if(limit) {
+    if(limit) {      
       if(j > limit) throw new Error("No pudo formarse un crucigrama");
     }    
   }
@@ -134,12 +134,16 @@ function formatMatrix(words) {
   return words;
 }
 
+function placeWordsDefault(words) {
+  return words.map((word, index) => ({ ...word, x0: 0, xf: word.value.length, y0: index, yf: index, direction: "across" }));
+}
+
 function generateCrossword(words, maxCols, maxRows, limit) {
   try {
     let map = placeWords(words, maxCols, maxRows, limit);
     return formatMatrix(map);
   } catch (e) {
-    throw e;
+    return placeWordsDefault(words);    
   }  
 }
 
