@@ -134,8 +134,22 @@ function formatMatrix(words) {
   return words;
 }
 
-function placeWordsDefault(words) {
-  return words.map((word, index) => ({ ...word, x0: 0, xf: word.value.length, y0: index, yf: index, direction: "across" }));
+function placeWordsDefault(words, maxRows, maxCols) {
+  words = sortWords(words);
+  let max = words[0].value.length;
+  if(max < maxCols) {
+    let vertical = maxCols - max;
+    let start = -1;
+    if(vertical > words.length / 2) vertical = parseInt(words.length / 2);
+    return words.map((word, index) => {     
+      if(vertical > 0) {    
+        vertical--;
+        return ({ ...word, x0: maxCols - (maxCols - vertical), xf: maxCols - (maxCols - vertical), y0: 0, yf: word.value.length - 1, direction: "vertical" });
+      } else if(start === -1) start = index + 1;
+      return ({ ...word, x0: start, xf: start + word.value.length - 1, y0: index, yf: index, direction: "across" });
+    });
+  }
+  return words.map((word, index) => ({ ...word, x0: 0, xf: word.value.length - 1, y0: index, yf: index, direction: "across" }));
 }
 
 function generateCrossword(words, maxCols, maxRows, limit) {
@@ -143,8 +157,12 @@ function generateCrossword(words, maxCols, maxRows, limit) {
     let map = placeWords(words, maxCols, maxRows, limit);
     return formatMatrix(map);
   } catch (e) {
-    return placeWordsDefault(words);    
+    return placeWordsDefault(words, maxRows, maxCols);    
   }  
 }
+
+const words = [{ value: "mercedes"},{value:"red bull"},{value:"haas"},{value:"ferrari"}];
+
+console.log(generateCrossword(words, 12,12,1000000));
 
 module.exports = { generateCrossword };
