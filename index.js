@@ -161,8 +161,4 @@ function generateCrossword(words, maxCols, maxRows, limit) {
   }  
 }
 
-const words = [{ value: "mercedes"},{value:"red bull"},{value:"haas"},{value:"ferrari"}];
-
-console.log(generateCrossword(words, 12,12,1000000));
-
 module.exports = { generateCrossword };
